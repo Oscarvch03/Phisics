@@ -72,8 +72,8 @@ class Solver:
 
             vx = vx + dvxdt * dt
             vy = vy + dvydt * dt
-            x = x + dxdt * dt
-            y = y + dydt * dt
+            x = x + vx * dt
+            y = y + vy * dt
             t = t + dtdt * dt
 
             final_state.append((x, y, vx, vy, t))
