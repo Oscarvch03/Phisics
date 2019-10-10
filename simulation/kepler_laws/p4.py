@@ -4,7 +4,7 @@
 # LIBRERIAS IMPORTADAS Y VARIABLES GLOBALES
 
 import sys
-sys.path.insert(0, '../')
+sys.path.insert(0, '../../')
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -62,7 +62,7 @@ infoelipses = []
 x0 = 1.
 vy0 = 1.
 for i in range(200):
-    print("cond ini:", round(x0, 2))
+    print("cond ini, x0 & vy0 =", round(x0, 2))
     v0 = vy0
     x0, y0, v0, a0, m = x0, .0, v0, 90., 1.
 
@@ -88,6 +88,10 @@ for i in range(200):
 
     sema, seme, exc, p = datos_elipse(xpos, ypos)
 
+    print("Sema =", sema, ", Seme =", seme)
+    print("Exc =", exc, ", p =", p)
+    print()
+
     infoelipses.append((round(x0, 2), round(vy0, 2), round(sema, 5), round(p, 5), cont))
 
     x0 += 0.008
@@ -106,17 +110,30 @@ for k in infoelipses:
 # print(ppos)
 
 tl = []
+logsemapos = []
+logppos = []
 for j in range(len(ppos)):
     tl.append((ppos[j] ** 2) / (semapos[j] ** 3))
-print(tl)
+    logsemapos.append(np.log(semapos[j]))
+    logppos.append(np.log(ppos[j]))
+# print(tl)
 
 fig, ax = plt.subplots()
 ax.plot(ppos, semapos, '--', label=m2)
 
 ax.set(xlabel='sema (a.u.)', ylabel='p (yr)',
-       title='Simulation Planet Motion, deltat: ' + str(deltat))
+       title='Simulation Planet Motion, deltat: ' + str(deltat) + ', Elipses Distintas: 200')
+
+
+# fig, ax = plt.subplots()
+# ax.plot(logppos, logsemapos, '--', label=m2)
+#
+# ax.set(xlabel='log(a)', ylabel='log(p)',
+#        title='Simulation Planet Motion, deltat: ' + str(deltat) + ', Elipses Distintas: 200')
+
 ax.grid()
 plt.legend()
+plt.savefig("p4pVSaLOG.jpg")
 plt.show()
 
 # Con deltat = 0.01/1024, y0 = 0, vx0 = 0

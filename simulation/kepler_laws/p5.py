@@ -4,7 +4,7 @@
 # LIBRERIAS IMPORTADAS Y VARIABLES GLOBALES
 
 import sys
-sys.path.insert(0, '../')
+sys.path.insert(0, '../../')
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -70,22 +70,25 @@ print("Area Ini:", areas[0], ", Area Fin:", areas[-1])
 # print(areas)
 # print(tpos)
 
-fig, ax = plt.subplots()
-ax.plot(xpos, ypos, '--', label=m2)
-
-ax.set(xlabel='x (a.u.)', ylabel='y (a.u.)',
-       title='Simulation Planet Motion, deltat: ' + str(deltat))
-
-
-
 # fig, ax = plt.subplots()
-# ax.plot(tpos, areas, '--', label=m2)
+# ax.plot(xpos, ypos, '--', label=m2)
 #
-# ax.set(xlabel='t (yr)', ylabel="A (a.u.**2)",
-#        title='Simulation Planet Motion, deltat: ' + str(deltat))
+# ax.set(xlabel='x (a.u.)', ylabel='y (a.u.)',
+#        title='Simulation Planet Motion, deltat: ' + str(deltat) + ', Orbits:' + str(cont))
+
+
+
+fig, ax = plt.subplots()
+ax.plot(tpos, areas, '--', label=m2)
+
+ax.set(xlabel='t (yr)', ylabel="A (a.u.**2)",
+       title='Simulation Planet Motion, deltat: ' + str(deltat) + ', Area Circ')
 
 ax.grid()
+fig = plt.gcf()
 plt.legend()
+fig.set_size_inches(10., 5.)
+plt.savefig("p5areaCirc.jpg", dpi = 100)
 plt.show()
 
 

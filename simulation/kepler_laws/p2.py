@@ -4,7 +4,7 @@
 # LIBRERIAS IMPORTADAS Y VARIABLES GLOBALES
 
 import sys
-sys.path.insert(0, '../')
+sys.path.insert(0, '../../')
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -43,7 +43,7 @@ def total_mechanic_energy(v, m):
 v0, vy = cond_init(1, 0, 0)
 x0, y0, v0, a0, m = 1., .0, v0, 90., 1.
 sim_params = m, GM
-deltat = 0.01/499.998
+deltat = 0.01/499.998 # para euler cromer deltat = 0.01/499.998
 
 m1 = "Euler"
 m2 = "Euler-Cromer"
@@ -61,7 +61,7 @@ for i in range(200000):
     xc, yc, vxc, vyc, tc = earth.get_state()
     v = np.sqrt(vxc**2 + vyc**2)
     emt = total_mechanic_energy(v, m)
-    em.append(emt)
+    em.append(round(emt, 2))
     xpos.append(xc)
     ypos.append(yc)
     tpos.append(tc)
@@ -75,14 +75,23 @@ for j in em:
 print("Energia Mec Tot In:", em[0], ", Energia Mec Tot In:", em[-1])
 print("Orbitas:", cont)
 # print(tpos)
-fig, ax = plt.subplots()
-ax.plot(xpos, ypos, '--', label=m2)
 
-ax.set(xlabel='x (a.u.)', ylabel='y (a.u.)',
-       title='Simulation Planet Motion, deltat: ' + str(deltat))
+# fig, ax = plt.subplots()
+# ax.plot(xpos, ypos, '--', label=m1)
+#
+# ax.set(xlabel='x (a.u.)', ylabel='y (a.u.)',
+#        title='Simulation Planet Motion, deltat: ' + str(deltat))
+# ax.grid()
+
+fig, ax = plt.subplots()
+ax.plot(tpos, em, '--', label=m2)
+
+ax.set(xlabel='t (yr)', ylabel='emt',
+       title='Simulation Planet Motion, deltat: ' + str(deltat) + ', Orbits:' + str(cont))
 ax.grid()
 
 plt.legend()
+plt.savefig("p2emtConsRound2.jpg")
 plt.show()
 
 

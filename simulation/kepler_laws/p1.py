@@ -4,7 +4,7 @@
 # LIBRERIAS IMPORTADAS Y VARIABLES GLOBALES
 
 import sys
-sys.path.insert(0, '../')
+sys.path.insert(0, '../../')
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -40,7 +40,7 @@ def universal_gravity(state, params):
 v0, vy = cond_init(1, 0, 0)
 x0, y0, v0, a0, m = 1., .0, v0, 90., 1.
 sim_params = m, GM
-deltat = 0.01/512
+deltat = 0.01/128
 
 m1 = "Euler"
 m2 = "Euler-Cromer"
@@ -49,7 +49,7 @@ m3 = "Midpoint"
 earth = pt.Particle("Earth", x0, y0, v0, a0, m)
 earth_force = fr.Forces(universal_gravity, sim_params)
 earth.set_force(earth_force)
-euler = sl.Solver(earth, m1, deltat)
+euler = sl.Solver(earth, m3, deltat)
 xpos, ypos, tpos = [], [], []
 cont = 0
 
@@ -69,13 +69,14 @@ print("Orbitas:", cont) # Aqui nos damos cuenta cuantas orbitas circulares hace 
 
 # print(tpos)
 fig, ax = plt.subplots()
-ax.plot(xpos, ypos, '--', label=m1)
+ax.plot(xpos, ypos, '--', label=m3)
 
 ax.set(xlabel='x (a.u.)', ylabel='y (a.u.)',
-       title='Projectile motion with drag')
+       title='Projectile motion with drag, deltat: ' + str(deltat) + ', Orbits:' + str(cont))
 ax.grid()
 
 plt.legend()
+plt.savefig("p1Midpoint.jpg")
 plt.show()
 
 

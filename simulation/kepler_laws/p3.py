@@ -4,7 +4,7 @@
 # LIBRERIAS IMPORTADAS Y VARIABLES GLOBALES
 
 import sys
-sys.path.insert(0, '../')
+sys.path.insert(0, '../../')
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -86,36 +86,42 @@ for i in range(200000):
 
 vmin = min(vpos)
 tmin = tpos[vpos.index(vmin)]
+xmin = xpos[vpos.index(vmin)]
+ymin = ypos[vpos.index(vmin)]
+
 vmax = max(vpos)
 tmax = tpos[vpos.index(vmax)]
+xmax = xpos[vpos.index(vmax)]
+ymax = ypos[vpos.index(vmax)]
 
 sema, seme, exc, p = datos_elipse(xpos, ypos)
 
-print("Vmin:", vmin, ", with t = ", tmin)
-print("Vmax:", vmax, ", with t = ", tmax)
+print("Vmin:", round(vmin, 4), ", with t = ", round(tmin, 4), ", in the point x =", round(xmin, 4), "and y =", round(ymin, 4))
+print("Vmax:", round(vmax, 4), ", with t = ", round(tmax, 4), ", in the point x =", round(xmax, 4), "and y =", round(ymax, 4))
 
-print("Sema:", sema, ", Seme:", seme)
+# print("Sema:", sema, ", Seme:", seme)
 
 print("Orbitas:", cont)
 # print(tpos)
 
-fig, ax = plt.subplots()
-ax.plot(xpos, ypos, '--', label=m2)
-
-ax.set(xlabel='x (a.u.)', ylabel='y (a.u.)',
-       title='Simulation Planet Motion, deltat: ' + str(deltat))
-
-
-
 # fig, ax = plt.subplots()
-# ax.plot(tpos, vpos, '--', label=m2)
+# ax.plot(xpos, ypos, '--', label=m2)
 #
-# ax.set(xlabel='t (yr)', ylabel="v (a.u./yr)",
-#        title='Simulation Planet Motion, deltat: ' + str(deltat))
+# ax.set(xlabel='x (a.u.)', ylabel='y (a.u.)',
+#        title='Simulation Planet Motion, deltat: ' + str(deltat) + ', Orbits:' + str(cont))
+
+
+
+fig, ax = plt.subplots()
+ax.plot(tpos, vpos, '--', label=m2)
+
+ax.set(xlabel='t (yr)', ylabel="v (a.u./yr)",
+       title='Simulation Planet Motion, deltat: ' + str(deltat) + ', Orbits:' + str(cont))
 
 
 ax.grid()
 plt.legend()
+plt.savefig("p3VmaxVmin1.5.jpg")
 plt.show()
 
 
