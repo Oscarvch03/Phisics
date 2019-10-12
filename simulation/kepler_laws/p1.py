@@ -76,7 +76,7 @@ ax.set(xlabel='x (a.u.)', ylabel='y (a.u.)',
 ax.grid()
 
 plt.legend()
-plt.savefig("p1Midpoint.PNG")
+plt.savefig("p1EulerEstable.PNG")
 plt.show()
 
 
