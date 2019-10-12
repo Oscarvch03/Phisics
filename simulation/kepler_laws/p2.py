@@ -20,7 +20,7 @@ GM = 4 * (np.pi)**2
 # DEFINICION DE CLASES Y FUNCIONES
 
 def cond_init(x, y, vx):
-    v = np.sqrt((4 * (np.pi)**2) / (x**2 + y**2))
+    v = np.sqrt(GM / np.sqrt(x**2 + y**2))
     vy = np.sqrt(v**2 - vx**2)
     return float(v), vy
 
