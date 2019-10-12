@@ -91,12 +91,12 @@ print("Method:", m2, ", dt:", deltat)
 print("Energia Mec Tot In:", em[0], ", Energia Mec Tot Fin:", em[-1])
 print("Orbitas:", cont)
 
-emmt = tpos[em.index(max(em))]
-# print(emmt)
-emmx = xpos[tpos.index(emmt)]
-emmy = ypos[tpos.index(emmt)]
-print("Punto donde emt es max:, x = ", round(emmx, 5), "& y =", round(emmy, 5))
-print("Con t =", round(emmt, 4), ", emtm =", max(em))
+# emmt = tpos[em.index(max(em))]
+# # print(emmt)
+# emmx = xpos[tpos.index(emmt)]
+# emmy = ypos[tpos.index(emmt)]
+# print("Punto donde emt es max:, x = ", round(emmx, 5), "& y =", round(emmy, 5))
+# print("Con t =", round(emmt, 4), ", emtm =", max(em))
 
 # GRAFICA xVSy
 # fig, ax = plt.subplots()
@@ -110,7 +110,7 @@ print("Con t =", round(emmt, 4), ", emtm =", max(em))
 fig, ax = plt.subplots()
 ax.plot(tpos, em, '--', label=m2)
 
-ax.set(xlabel='t (yr)', ylabel='emt',
+ax.set(xlabel='t (h)', ylabel='emt',
        title='Simulation Planet Motion with Stellar Drag, deltat: ' + str(deltat) + ', Orbits:' + str(cont))
 ax.grid()
 
@@ -118,7 +118,7 @@ ax.grid()
 # fig, ax = plt.subplots()
 # ax.plot(tpos, vel, '--', label=m2)
 #
-# ax.set(xlabel='t (yr)', ylabel='v(E.U / h)',
+# ax.set(xlabel='t (h)', ylabel='v(E.U / h)',
 #        title='Simulation Planet Motion with Stellar Drag, deltat: ' + str(deltat) + ', Orbits:' + str(cont))
 # ax.grid()
 
