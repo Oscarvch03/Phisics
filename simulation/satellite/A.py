@@ -38,8 +38,8 @@ def universal_gravity(state, params):
     ay = (-gu * y / r3) - A * np.sqrt(vx**2 + vy**2) * y
     return vx, vy, ax, ay, 1.
 
-def total_mechanic_energy(v, m): # cambiar con A & W
-    emt = (1/2) * m * (v**2) - GMe * m  # Julian nos la dio asi, hay que averiguar por que
+def total_mechanic_energy(v, m, x, y): # cambiar con A & W
+    emt = (1/2) * m * (v**2) - GMe * m / np.sqrt(x**2 + y**2)  # Julian nos la dio asi, hay que averiguar por que
     return emt
 
 
@@ -69,7 +69,7 @@ for i in range(200000):
     xc, yc, vxc, vyc, tc = satellite.get_state()
     v = np.sqrt(vxc**2 + vyc**2)
     vel.append(v)
-    emt = total_mechanic_energy(v, m)
+    emt = total_mechanic_energy(v, m, xc, yc)
     em.append(round(emt, 2))
     xpos.append(xc)
     ypos.append(yc)
