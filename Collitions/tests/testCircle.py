@@ -4,7 +4,13 @@ import random
 
 class InteractiveCircle:
     def __init__(self):
-        self.fig, self.ax = plt.subplots()
+        self.fig, self.ax = plt.subplots(figsize = (20, 20))
+
+        self.fig.patch.set_facecolor('xkcd:lightgreen')
+        self.ax.set_facecolor('xkcd:black')
+        self.ax.set_aspect('equal')
+        # self.ax.set_axis_bgcolor('black')
+
         self.ax.set_xlim(0, 200)
         self.ax.set_ylim(0, 200)
 
@@ -25,6 +31,7 @@ class InteractiveCircle:
             plt.pause(1)
 
     def show(self):
+        plt.grid(True, color = 'w')
         plt.show()
 
 

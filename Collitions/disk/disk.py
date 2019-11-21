@@ -4,29 +4,31 @@
 # LIBRERIAS IMPORTADAS #########################################################
 
 import numpy as np
-
+from matplotlib.patches import Circle
 
 ################################################################################
 # DEFINICION DE CLASES Y VARIABLES BLOBALES ####################################
 
-LX, LY = 10, 8
+LX, LY = 200, 200
 VEL_SCALE = 0.9
 
 class Disk:
 
     def __init__(self, x = None, y = None, vx = None, vy = None, mass = 1, rad = 1,
-                 col = (0, 0, 0), tag = -1):
+                 col = None, tag = -1):
         self.x = x
         self.y = y
         self.vx = vx
         self.vy = vy
-        self.v = np.sqrt(vx**2 + vy**2)
+        if vx and vy != None:
+            self.v = np.sqrt(vx**2 + vy**2)
         self.mass = mass
         self.rad = rad
         self.col = col
-        self. tag = tag
+        self.tag = tag
         self.wall_colls = 0
         self.disk_colls = 0
+        self.obj = Circle((x, y), rad, color = col)
 
 
     def __str__(self):
@@ -36,6 +38,9 @@ class Disk:
         msg += "col = {0}\n".format(self.col)
         msg += "mass = {0}, rad = {1}\n".format(self.mass, self.rad)
         return msg
+
+    def num_colls(self):
+        return self.wall_colls + self.disk_colls
 
     def horz_wall_coll(self):
         if self.vy < 0:
@@ -121,7 +126,6 @@ class Disk:
 
         self.disk_colls += 1
         other.disk_colls += 1
-
 
     def position(self, pos = None):
         if pos == None:
