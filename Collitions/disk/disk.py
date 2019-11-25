@@ -8,9 +8,11 @@ from matplotlib.patches import Circle
 
 ################################################################################
 # DEFINICION DE CLASES Y VARIABLES BLOBALES ####################################
-
+WX, WY = 20, 20
 LX, LY = 200, 200
-VEL_SCALE = 0.9
+
+VX = 0.5
+VY = 0.3
 
 class Disk:
 
@@ -28,15 +30,16 @@ class Disk:
         self.tag = tag
         self.wall_colls = 0
         self.disk_colls = 0
-        self.obj = Circle((x, y), rad, color = col)
+        self.obj = None
 
 
     def __str__(self):
+        print()
         msg = "Tag = {0}\n".format(self.tag)
         msg += "r = ({0}, {1})\n".format(self.x, self.y)
         msg += "v = ({0}, {1})\n".format(self.vx, self.vy)
         msg += "col = {0}\n".format(self.col)
-        msg += "mass = {0}, rad = {1}\n".format(self.mass, self.rad)
+        msg += "mass = {0}, rad = {1}".format(self.mass, self.rad)
         return msg
 
     def num_colls(self):

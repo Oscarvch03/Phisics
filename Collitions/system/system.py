@@ -7,6 +7,12 @@ import numpy as np
 import disk.disk as disk
 import event.event as ev
 
+import heapq as pq
+import matplotlib.pyplot as plt
+from time import sleep
+
+
+
 #falta frame
 
 class System:			## ?????????|
@@ -37,6 +43,7 @@ class System:			## ?????????|
 
         t_vert = saucer.vert_wall_coll()
         t_horz = saucer.horz_wall_coll()
+        # print("check_colls", t_vert, t_horz)
 
         if self.time + t_vert <= sim_time:
             event = ev.Event(self.time + t_vert, saucer, None)
@@ -49,30 +56,29 @@ class System:			## ?????????|
 #----------------------------------------------------------------
 
     def valid(self, event):
-    	this_tag, that_tag = event.get_tags()
-    	this_ocolls, that_ocolls = event.get_colls()
-
-    	if this_tag is not None:
-    		this_ncolls = self.particles[this_tag].num_colls()
-    		if this_ncolls > this_ocolls:
-    			return False				# Compara las del evento con las colisiones actuales
-
-    	if that_tag is not None:
-    		that_ncolls = self.particles[that_tag].num_colls()
-    		if that_ncolls > that_ocolls:
-    			return False
-
-    	return True
+        this_tag, that_tag = event.this_tag, event.that_tag
+        this_ocolls, that_ocolls = event.this_colls, event.that_colls
+        if this_tag is not None:
+            this_ncolls = self.particles[int(this_tag)].num_colls()
+            # print("this_ncolls", this_ncolls, "this_ocolls", this_ocolls)
+            if this_ncolls > this_ocolls:
+                return False				# Compara las del evento con las colisiones actuales
+        if that_tag is not None:
+            that_ncolls = self.particles[int(that_tag)].num_colls()
+            if that_ncolls > that_ocolls:
+                return False
+        return True
 
 #----------------------------------------------------------------
 
     def next_valid_event(self):
-    	self.frame += 1
-    	while self.minpq != []: #mientras tenga eventos
-    		event = pq.heappop(self.minpq)
-    		if self.valid(event):
-    			return event
-    	return None
+
+        while self.minpq != []: #mientras tenga eventos
+            event = pq.heappop(self.minpq)
+            # print("evento:", event)
+            if self.valid(event):
+                return event
+        return None
 
 
 
@@ -91,38 +97,96 @@ class System:			## ?????????|
         tag_a, tag_b = event.this_tag, event.that_tag
 
         if tag_a is not None and tag_b is not None:
-            self.particles[tag_a].update_velocity_disk(self.particles[tag_b])
+            self.particles[int(tag_a)].update_velocity_disk(self.particles[int(tag_b)])
         elif tag_a is not None and tag_b is None:
-            self.particles[tag_a].update_velocity_vert()
+            self.particles[int(tag_a)].update_velocity_vert()
         elif tag_a is None and tag_b is not None:
-            self.particles[tag_b].update_velocity_horz()
+            self.particles[int(tag_b)].update_velocity_horz()
 
 
     def predict_colls(self, event, sim_time):
         tag_a, tag_b = event.this_tag, event.that_tag
 
         if tag_a is not None:
-            self.check_colls(self.particles[tag_a], sim_time)
+            self.check_colls(self.particles[int(tag_a)], sim_time)
 
         if tag_b is not None:
-            self.check_colls(self.particles[tag_b], sim_time)
+            self.check_colls(self.particles[int(tag_b)], sim_time)
 
+        # print()
+        # print("minpq:", len(self.minpq))
+        # print()
 
+########################################################################
+    # 2.4.1 DEPURACION DE LA IMPLEMENTACION
+
+    def Ptot(self, n): # Terminar de Revisar
+        Pt = 0
+        for i in range(1, len(self.particles) + 1):
+            N = self.particles[i-1]
+            Pt += (1/n) * (N.mass * N.speed())
+        return Pt
+########################################################################
 
 
     def main_loop(self, sim_time, fpe=None):
+        # listx = []
+        # listy = []
+        PtotL = []
+
+        fig, ax = plt.subplots()
+        fig.set_size_inches(20, 20)
+        fig.patch.set_facecolor('xkcd:lightgreen')
+
+        ax.set_facecolor('xkcd:black')
+        ax.set_aspect('equal')
+        ax.set_xlim(0, 200)
+        ax.set_ylim(0, 200)
+        ax.set_title('Simulation Collition Particles')
+        plt.grid(True, color = 'w')
+
         for dish in self.particles:
             self.check_colls(dish, sim_time)
+            if self.window == True:
+                ax.add_artist(dish.obj)
+                fig.canvas.draw()
 
-        # ANIMACION
-
+        cont = 0
         while(len(self.minpq) != 0):
+            # print()
+            # print("minpq", len(self.minpq))
+            # print()
+
+            for k in self.particles:
+                # print(k)
+                # listx.append(k.x)
+                # listy.append(k.y)
+                if self.window == True:
+                    k.obj.center = k.x, k.y
+                    fig.canvas.draw()
+                    plt.pause(0.0001)
+
             event = self.next_valid_event()
+            # print(event)
             if event is None:
+                # print("hiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
                 break
             self.move_all_particles(event)
             self.update_velocities(event)
             self.predict_colls(event, sim_time)
+            cont += 1
+            # print(cont)
+            # n = input()
+
+
+        if self.window == True:
+            plt.show()
+        # print("listx:", listx)
+        # print("listy:", listy)
+
+        # return listx, listy
+        return PtotL
+
 
     ############################################
     # def write_time_to_screen(self)
@@ -154,4 +218,4 @@ class System:			## ?????????|
 
                 idish.x = tmp_pos[0]
                 idish.y = tmp_pos[1]
-                idish.obj.center = idish.x, idish.y
+                # idish.obj.center = idish.x, idish.y

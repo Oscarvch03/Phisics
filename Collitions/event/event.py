@@ -4,9 +4,9 @@ class Event:
     def __init__(self, t, this, that):
         self.time = t
         self.this_tag = None if this is None else this.tag
-        self.that_tag = None if this is None else that.tag
-        self.this_colls = None if this is None else this.num_colls
-        self.that_colls = None if that is None else that.num_colls
+        self.that_tag = None if that is None else that.tag
+        self.this_colls = None if this is None else this.num_colls()
+        self.that_colls = None if that is None else that.num_colls()
 
     def __str__(self):
         str = "Begin Event: \n"
