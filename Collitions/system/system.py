@@ -149,22 +149,13 @@ class System:			## ?????????|
             self.check_colls(dish, sim_time)
             if self.window == True:
                 ax.add_artist(dish.obj)
-                fig.canvas.draw()
+        fig.canvas.draw()
 
         cont = 0
         while(len(self.minpq) != 0):
             # print()
             # print("minpq", len(self.minpq))
             # print()
-
-            for k in self.particles:
-                # print(k)
-                # listx.append(k.x)
-                # listy.append(k.y)
-                if self.window == True:
-                    k.obj.center = k.x, k.y
-                    fig.canvas.draw()
-                    plt.pause(0.0001)
 
             event = self.next_valid_event()
             # print(event)
@@ -177,6 +168,15 @@ class System:			## ?????????|
             cont += 1
             # print(cont)
             # n = input()
+
+            for k in self.particles:
+            # print(k)
+            # listx.append(k.x)
+            # listy.append(k.y)
+                if self.window == True:
+                    k.obj.center = k.x, k.y
+            fig.canvas.draw()
+            plt.pause(0.00000000000001)
 
 
         if self.window == True:

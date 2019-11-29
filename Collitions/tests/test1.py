@@ -31,13 +31,13 @@ def check_overlap():
 
 
 NoPart = 50
-colors = ['red', 'blue', 'green', 'yellow', 'pink']
+colors = ['red', 'blue', 'green', 'yellow', 'pink', 'magenta', 'cyan']
 
-wind = False
+wind = True
 System = sy.System(window = wind)
 
 for i in range(NoPart):
-    System.particles.append(disk.Disk(vx = disk.VX, vy = disk.VY, rad = 3, col = random.choice(colors), tag = str(i)))
+    System.particles.append(disk.Disk(vx = disk.VX, vy = disk.VY, rad = 2, col = random.choice(colors), tag = str(i)))
 
 System.set_random_positions()
 
@@ -49,7 +49,7 @@ for j in System.particles:
     cont += 1
     j.obj = Circle((j.x, j.y), j.rad, color = j.col)
 
-sim_time = 1000
+sim_time = 5000
 # x, y = System.main_loop(sim_time) # Revisar mejor fluidez para la ANIMACION
 # System.main_loop(sim_time)
 Ptot = System.main_loop(sim_time)
