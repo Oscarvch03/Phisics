@@ -1,28 +1,30 @@
 # system.py
 
+################################################################################
+# LIBRERIAS IMPORTADAS #########################################################
+
 import sys
 sys.path.insert(0, '../')
+
+import heapq as pq
+import matplotlib.pyplot as plt
 
 import numpy as np
 import disk.disk as disk
 import event.event as ev
 
-import heapq as pq
-import matplotlib.pyplot as plt
-from time import sleep
 
+################################################################################
+# DEFINICION DE CLASES Y FUNCIONES
 
-
-#falta frame
-
-class System:			## ?????????|
+class System:
     def __init__(self, particles = [], window = None, fpe = None):
-    	self.time = 0			#Tiempo de simulación
-    	self.minpq = []			# Colisiones del minpq
-    	self.particles = particles	#Lista de particulas de system
-    	self.turtles = [] 		# Dibujar uno a uno con las particulas
+    	self.time = 0
+    	self.minpq = []
+    	self.particles = particles
+    	self.turtles = []
     	self.frame, self.fpe = 0, fpe
-    	self.window = window	# Donde ser dibujada
+    	self.window = window
 
 
     def __str__(self):
@@ -32,6 +34,7 @@ class System:			## ?????????|
     	pal += "Collision priority queue: {}\n".format(len(self.minpq))
     	pal += "| " + " | ".join(map(repr, self.minpq)) + " |"
     	return pal
+
 
     def check_colls(self, saucer, sim_time):
 
@@ -43,7 +46,6 @@ class System:			## ?????????|
 
         t_vert = saucer.vert_wall_coll()
         t_horz = saucer.horz_wall_coll()
-        # print("check_colls", t_vert, t_horz)
 
         if self.time + t_vert <= sim_time:
             event = ev.Event(self.time + t_vert, saucer, None)
@@ -53,44 +55,34 @@ class System:			## ?????????|
             pq.heappush(self.minpq, event)
 
 
-#----------------------------------------------------------------
-
     def valid(self, event):
         this_tag, that_tag = event.this_tag, event.that_tag
         this_ocolls, that_ocolls = event.this_colls, event.that_colls
         if this_tag is not None:
             this_ncolls = self.particles[int(this_tag)].num_colls()
-            # print("this_ncolls", this_ncolls, "this_ocolls", this_ocolls)
             if this_ncolls > this_ocolls:
-                return False				# Compara las del evento con las colisiones actuales
+                return False
         if that_tag is not None:
             that_ncolls = self.particles[int(that_tag)].num_colls()
             if that_ncolls > that_ocolls:
                 return False
         return True
 
-#----------------------------------------------------------------
 
     def next_valid_event(self):
 
-        while self.minpq != []: #mientras tenga eventos
+        while self.minpq != []:
             event = pq.heappop(self.minpq)
-            # print("evento:", event)
             if self.valid(event):
                 return event
         return None
 
 
-
-#----------------------------------------------------------------
     def move_all_particles(self, event):
         event_time = event.time
         for dish in self.particles:
             dish.move(event_time - self.time)
         self.time = event.time
-
-        # ANIMACION
-
 
 
     def update_velocities(self, event):
@@ -113,79 +105,88 @@ class System:			## ?????????|
         if tag_b is not None:
             self.check_colls(self.particles[int(tag_b)], sim_time)
 
-        # print()
-        # print("minpq:", len(self.minpq))
-        # print()
 
-########################################################################
+################################################################################
     # 2.4.1 DEPURACION DE LA IMPLEMENTACION
 
-    def Ptot(self, n): # Terminar de Revisar
-        Pt = 0
-        for i in range(1, len(self.particles) + 1):
-            N = self.particles[i-1]
-            Pt += (1/n) * (N.mass * N.speed())
-        return Pt
-########################################################################
+    def check_overlap(self):
+        for i in self.particles:
+            for j in self.particles:
+                if i.tag != j.tag:
+                    dist1 = np.sqrt((j.x - i.x)**2 + (j.y - i.y)**2)
+                    dist2 = i.rad + j.rad
+                    if dist1 < dist2:
+                        print("2.4.1 check_overlap: Hay Overlap, Pailas.")
+                        return
+        print("2.4.1 check_overlap(): Todo está Perfecto.")
 
 
+    def Ptot(self):
+        p = 0
+        N = len(self.particles)
+        for i in range(0, N):
+            part = self.particles[i]
+            p += part.mass * part.speed()
+        p /= N
+        # print("      Ptot: Calculando Momentum y graficando.")
+        return p
+
+################################################################################
+
+################################################################################
+    # 2.4.2 RED RECTANGULAR Y DENSIDAD DE PARTICULAS
+
+    def red_rectangular(self):
+        
+
+################################################################################
     def main_loop(self, sim_time, fpe=None):
-        # listx = []
-        # listy = []
-        PtotL = []
+        # Funcion bella & hermosa que hace todo
+        Ptot = []
+        if self.window == True:
+            fig, ax = plt.subplots()
+            fig.set_size_inches(disk.WX, disk.WY)
+            fig.patch.set_facecolor('xkcd:lightgreen')
 
-        fig, ax = plt.subplots()
-        fig.set_size_inches(20, 20)
-        fig.patch.set_facecolor('xkcd:lightgreen')
-
-        ax.set_facecolor('xkcd:black')
-        ax.set_aspect('equal')
-        ax.set_xlim(0, 200)
-        ax.set_ylim(0, 200)
-        ax.set_title('Simulation Collition Particles')
-        plt.grid(True, color = 'w')
+            ax.set_facecolor('xkcd:black')
+            ax.set_aspect('equal')
+            ax.set_xlim(0, disk.LX)
+            ax.set_ylim(0, disk.LY)
+            ax.set_title('Simulation Collition Particles')
+            plt.grid(True, color = 'w')
 
         for dish in self.particles:
             self.check_colls(dish, sim_time)
             if self.window == True:
                 ax.add_artist(dish.obj)
-        fig.canvas.draw()
+        if self.window == True:
+            fig.canvas.draw()
 
         cont = 0
         while(len(self.minpq) != 0):
-            # print()
-            # print("minpq", len(self.minpq))
-            # print()
-
             event = self.next_valid_event()
-            # print(event)
             if event is None:
-                # print("hiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
                 break
             self.move_all_particles(event)
             self.update_velocities(event)
             self.predict_colls(event, sim_time)
             cont += 1
-            # print(cont)
-            # n = input()
 
             for k in self.particles:
-            # print(k)
-            # listx.append(k.x)
-            # listy.append(k.y)
-                if self.window == True:
-                    k.obj.center = k.x, k.y
-            fig.canvas.draw()
-            plt.pause(0.00000000000001)
+                k.obj.center = k.x, k.y
+            if self.window == True:
+                fig.canvas.draw()
+                plt.pause(0.000000000000001)
 
+            Pt = self.Ptot()
+            Ptot.append(round(Pt, 2))
 
         if self.window == True:
             plt.show()
-        # print("listx:", listx)
-        # print("listy:", listy)
 
-        # return listx, listy
-        return PtotL
+        print("      Ptot(): Calculando Momentum y graficando.")
+
+        return Ptot
 
 
     ############################################
@@ -193,6 +194,7 @@ class System:			## ?????????|
     # def create_all_artists(self)
     # def draw_all_artists(self)
     ############################################
+
 
     def set_random_positions(self):
         self.particles[0].x = disk.LX/2.0
@@ -218,4 +220,3 @@ class System:			## ?????????|
 
                 idish.x = tmp_pos[0]
                 idish.y = tmp_pos[1]
-                # idish.obj.center = idish.x, idish.y
