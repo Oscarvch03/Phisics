@@ -136,8 +136,20 @@ class System:
 ################################################################################
     # 2.4.2 RED RECTANGULAR Y DENSIDAD DE PARTICULAS
 
-    def red_rectangular(self):
-        
+    def red_cuadrada(self, f, c):
+        df1 = disk.LX / c
+        dc1 = disk.LY / f
+        # print("df1 =", df1, "df2 =", df1)
+        cont = 0
+        dc2 = dc1 - self.particles[cont].rad
+        for i in range(f):
+            df2 = df1 - self.particles[cont].rad
+            for j in range(c):
+                self.particles[cont].x = df2 # round(df2, 2)
+                self.particles[cont].y = dc2 # round(dc2, 2)
+                df2 += df1 # round(df1, 2)
+                cont += 1
+            dc2 += dc1 # round(dc1, 2)
 
 ################################################################################
     def main_loop(self, sim_time, fpe=None):
@@ -161,6 +173,7 @@ class System:
                 ax.add_artist(dish.obj)
         if self.window == True:
             fig.canvas.draw()
+            plt.pause(3)
 
         cont = 0
         while(len(self.minpq) != 0):
