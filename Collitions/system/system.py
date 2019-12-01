@@ -223,7 +223,7 @@ class System:
             plt.pause(3)
 
         if sim_time == 0:
-            return
+            return 0, 0
 
         cont = 0
         if len(self.minpq) == 0:
@@ -237,6 +237,9 @@ class System:
             self.update_velocities(event)
             self.predict_colls(event, sim_time)
             cont += 1
+            if cont == 1000:
+                plt.savefig("242redCF2.PNG")
+                break
             # print(cont)
 
             for k in self.particles:

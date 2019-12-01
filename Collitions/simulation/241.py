@@ -55,6 +55,10 @@ plt.show()
 
 ################################################################################
 
+# Tomando N = 50
+# VX = 0.9; VY = 0.9; rad = 2 para todos los discos
+# sim_time = 20000
+
 # Después de ejecutar la función check_overlap() podemos afirmar que los discos
 # no se solapan, así podemos comenzar con la función mainloop() que se encarga de
 # correr la simulación
@@ -65,3 +69,8 @@ plt.show()
 
 # Como el Momentum Lineal es un vector, podemos separarlo en Momentum sobre el
 # eje x y Momentum sobre el eje y: 241Ptotx.PNG & 241Ptoty.PNG
+
+# Podemos concluir que el Momentum Lineal total no se conserva de forma exacta,
+# lo cual se ve en las graficas, ya que los muros por asi decirlo tienen
+# masa infinita, y como estos me afectan las colisiones, se generan cambios de
+# velocidades que afectan el Momentum.

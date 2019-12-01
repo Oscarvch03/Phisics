@@ -61,3 +61,22 @@ ax.set(xlabel = 't (tiempo)', ylabel = 'T(t) (Temperatura)(K°)', title = 'Tempe
 ax.grid()
 plt.savefig("243TempTot.PNG")
 plt.show()
+
+################################################################################
+
+# Tomando N = 100
+# rad = 0.1
+# VX entre 0 & 0.00000000000000000001 para todos los discos
+# VY entre 0 & 0.00000000000000000001 para todos los discos
+# sim_time = 20000000000000000000000
+
+# Foto sobre formula
+
+# Teniendo en cuenta que el Momentum Lineal total no se conserva con exactitud,
+# y como en la formula la Temperatura T(t) depende del Momentum lineal total,
+# entonces es de esperarse que la Temperatura tampoco se conserve de forma exacta,
+# sino que tienda a oscilar y converger sobre un valor. : 243TempTot.PNG
+
+# El efecto de aumentar las velocidades de todos los discos a lo largo de un
+# tiempo t por un factor, implica que el Momentum va a aumentar, y como consecuencia directa,
+# la temperatura tiende a aumentar ya que depende del Momentum cuando se calcula.
