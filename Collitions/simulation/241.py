@@ -40,7 +40,7 @@ for j in System.particles:
     j.obj = Circle((j.x, j.y), j.rad, color = j.col)
 
 sim_time = 20000
-Ptot = System.main_loop(sim_time) # Retorna el Momentum en un tiempo t
+Ptot, TempTot = System.main_loop(sim_time) # Retorna el Momentum en un tiempo t
 
 # 2.4.1 Grafica del Momentum Lineal
 # print(Ptot)
@@ -52,3 +52,16 @@ ax.set(xlabel = 't (tiempo)', ylabel = 'Ptot(t) (Momentum)', title = 'Momentum P
 ax.grid()
 # plt.savefig("241Ptot.PNG")
 plt.show()
+
+################################################################################
+
+# Después de ejecutar la función check_overlap() podemos afirmar que los discos
+# no se solapan, así podemos comenzar con la función mainloop() que se encarga de
+# correr la simulación
+
+# Además la idea es calcular el Momentum Lineal a medida que avanza el tiempo,
+# asi que lo calculamos con la función Ptot(t) y posteriormente hacemos una
+# grafica con toda la información recopilada: 241Ptot.PNG
+
+# Como el Momentum Lineal es un vector, podemos separarlo en Momentum sobre el
+# eje x y Momentum sobre el eje y: 241Ptotx.PNG & 241Ptoty.PNG

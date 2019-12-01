@@ -24,7 +24,7 @@ disk.VY = 0.3
 
 NoPart = 100
 colors = ['red', 'blue', 'green', 'yellow', 'pink', 'magenta', 'cyan', 'orange', 'purple']
-radio = 0.3 # 0.05
+radio = 0.55 # 0.05
 
 wind = True
 System = sy.System(window = wind)
@@ -40,5 +40,7 @@ for j in System.particles:
     cont += 1
     j.obj = Circle((j.x, j.y), j.rad, color = j.col)
 
-sim_time = 5000
-Ptot = System.main_loop(sim_time) # Retorna el Momentum en un tiempo t
+sim_time = 0
+Ptot, TempTot = System.main_loop(sim_time) # Retorna el Momentum en un tiempo t
+plt.savefig("242densidadmaxima.PNG")
+print(System.densidad())

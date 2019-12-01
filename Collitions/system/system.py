@@ -8,11 +8,12 @@ sys.path.insert(0, '../')
 
 import heapq as pq
 import matplotlib.pyplot as plt
-
+import random
 import numpy as np
+from scipy.constants import k as Boltzmann
+
 import disk.disk as disk
 import event.event as ev
-
 
 ################################################################################
 # DEFINICION DE CLASES Y FUNCIONES
@@ -121,15 +122,22 @@ class System:
         print("2.4.1 check_overlap(): Todo está Perfecto.")
 
 
-    def Ptot(self):
+    def Ptot(self, eje = None):
         p = 0
         N = len(self.particles)
         for i in range(0, N):
             part = self.particles[i]
-            p += part.mass * part.speed()
+            if eje == 1:
+                p += part.mass * part.vx
+            elif eje == 2:
+                p += part.mass * part.vy
+            elif eje == None:
+                p += part.mass * part.speed()
         p /= N
         # print("      Ptot: Calculando Momentum y graficando.")
+        # print("p =", p)
         return p
+
 
 ################################################################################
 
@@ -150,11 +158,50 @@ class System:
                 df2 += df1 # round(df1, 2)
                 cont += 1
             dc2 += dc1 # round(dc1, 2)
+        print("2.4.2 red_cuadrada(): Montando red regular de discos.")
+
+    def densidad(self):
+        n = len(self.particles)/(disk.LX * disk.LY)
+        print("2.4.2 densidad(): Calculando densidad del sistema. ")
+        return n
 
 ################################################################################
+
+################################################################################
+    # 2.4.3 TEMPERATURA
+
+    def temperatura(self):
+        KB = Boltzmann
+        # print("kb =", KB)
+        Ptot = self.Ptot()
+        temp = Ptot/(2*KB*len(self.particles))
+        # print("Temp =", temp)
+        return temp
+
+    def aux(self, Temp):
+        fc = 1.001
+        for i in self.particles:
+            i.vx = random.uniform(0., 0.00000000000000000001)
+            i.vy = random.uniform(0., 0.00000000000000000001)
+        while True:
+            temp = self.temperatura()
+            if Temp <= temp:
+                print("2.4.3 Se alcanzo la temperatura deseada, temp =", temp)
+                break
+            else:
+                for k in self.particles:
+                    k.vx *= fc
+                    k.vy *= fc
+        return temp
+
+################################################################################
+
+
     def main_loop(self, sim_time, fpe=None):
+
         # Funcion bella & hermosa que hace todo
         Ptot = []
+        TempTot = []
         if self.window == True:
             fig, ax = plt.subplots()
             fig.set_size_inches(disk.WX, disk.WY)
@@ -175,15 +222,22 @@ class System:
             fig.canvas.draw()
             plt.pause(3)
 
+        if sim_time == 0:
+            return
+
         cont = 0
+        if len(self.minpq) == 0:
+            print("Pailas")
         while(len(self.minpq) != 0):
             event = self.next_valid_event()
             if event is None:
+                print("Pailas")
                 break
             self.move_all_particles(event)
             self.update_velocities(event)
             self.predict_colls(event, sim_time)
             cont += 1
+            # print(cont)
 
             for k in self.particles:
                 k.obj.center = k.x, k.y
@@ -192,14 +246,17 @@ class System:
                 plt.pause(0.000000000000001)
 
             Pt = self.Ptot()
-            Ptot.append(round(Pt, 2))
+            Ptot.append(Pt)
+
+            TempT = self.temperatura()
+            TempTot.append(TempT)
 
         if self.window == True:
             plt.show()
+        print("2.4.1 Ptot(): Calculando Momentum y graficando")
+        print("2.4.3 temperatura(): Calculando Temperatura del sistema y graficando.")
 
-        print("      Ptot(): Calculando Momentum y graficando.")
-
-        return Ptot
+        return Ptot, TempTot
 
 
     ############################################
